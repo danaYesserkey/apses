@@ -23,5 +23,14 @@ services:
     depends_on:
       - db
 
+  caddy:
+    image: caddy:2.8
+    ports:
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+
 volumes:
   db_data:
+  caddy_data:
