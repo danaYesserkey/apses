@@ -1,0 +1,25 @@
+name: security
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.18.4 \
+            detect --source /repo --verbose --redact
+
+  semgrep:
+    runs-on: ubuntu-latest
+    container: semgrep/semgrep:1.90.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Semgrep SAST
+        run: semgrep scan --config auto --error
